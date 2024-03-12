@@ -11,9 +11,22 @@ form {
   display: flex;
   flex-direction: column;
   width: 300px;
-  gap: 10px;
+  gap: 15px;
+}
+
+p {
+  margin-bottom: 50px;
+}
+
+input[type="text"] {
+  margin-top: 5px;
 }
 
 input[type="submit"] {
+  margin-top: 10px;;
   width: 70px
+}
+
+label {
+  width:min-content;
 }
