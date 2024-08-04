@@ -2,9 +2,8 @@ extends layout
 
 block content
 
-  for message in messages
-    h1= message.text 
-    h2= message.user 
-    p= message.added
+  for message in messages 
+    h2= message.username
+    p= message.message
     
   a(href='./new') Submit Message

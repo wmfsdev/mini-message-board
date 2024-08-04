@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
+const pool = require('../db/pool')
+
 const messages = [
   {
     text: "Hi there!",
@@ -26,8 +28,13 @@ router.post('/new', (req, res) => {
 
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { messages });
+router.get('/', async function(req, res, next) {
+
+  const { rows } = await pool.query("SELECT * FROM messages;")
+  // console.log("rows: ", rows)
+  res.render('index', { 
+    messages: rows,
+   });
 });
 
 module.exports = router;
