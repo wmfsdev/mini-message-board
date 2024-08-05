@@ -2,36 +2,39 @@ const express = require('express');
 const router = express.Router();
 
 const pool = require('../db/pool')
+const { body, validationResult } = require("express-validator");
 
-const messages = [
-  {
-    text: "Hi there!",
-    user: "Amando",
-    added: new Date()
-  },
-  {
-    text: "Hello World!",
-    user: "Charles",
-    added: new Date()
+const validate = [
+  body("name").trim()
+    .isLength({ max: 7 })
+    .escape()
+    .withMessage("nope"),
+  body("message").trim()
+    .isLength({ max: 7 })
+    .escape()
+    .withMessage("nope"),
+]
+
+router.post('/new', validate, async function(req, res, next) {
+
+  const errors = validationResult(req, res)
+  if (!errors.isEmpty()){
+    return res.send("fail")
   }
-];
+  const username = req.body.name
+  const message = req.body.message
 
-router.post('/new', (req, res) => {
-  console.log(req.body.message)
-  messages.push({
-    text: req.body.message,
-    user: req.body.name,
-    added: new Date()
-  })
+  const text = "INSERT INTO messages (username, message) VALUES ($1, $2)  "
+  const values = [ username, message ]
+
+  await pool.query(text, values)
   res.redirect('/')
 })
 
-
-/* GET home page. */
 router.get('/', async function(req, res, next) {
 
   const { rows } = await pool.query("SELECT * FROM messages;")
-  // console.log("rows: ", rows)
+
   res.render('index', { 
     messages: rows,
    });
